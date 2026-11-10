@@ -1,11 +1,12 @@
 package it.unibo.functional;
 
-import it.unibo.functional.api.Function;
-
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+
+import it.unibo.functional.api.Function;
 
 /**
  * A special utility class with methods that transform collections using {@link Function}s provided as parameters.
@@ -54,7 +55,12 @@ public final class Transformers {
      * @return A transformed list where each input element is replaced with the produced elements
      */
     public static <I, O> List<O> transform(final Iterable<I> base, final Function<I, O> transformer) {
-        return null;
+        List<O> outputList = new ArrayList<>(); 
+        for (I elem : base) {
+            O output = transformer.call(elem);
+            outputList.add(output); 
+        }
+        return outputList;
     }
 
     /**
@@ -70,7 +76,13 @@ public final class Transformers {
      * @return A flattened list with the elements of each collection in the input
      */
     public static <I> List<? extends I> flatten(final Iterable<? extends Collection<? extends I>> base) {
-        return null;
+        List<I> flattenList = new ArrayList<>();
+        Iterator<? extends Collection<? extends I>> iterator = base.iterator();
+        while (iterator.hasNext()) {
+            Collection<? extends I> elem = iterator.next();
+            flattenList.addAll(elem);
+        }
+        return flattenList;
     }
 
     /**
@@ -87,7 +99,15 @@ public final class Transformers {
      * @return A list containing only the elements that passed the test
      */
     public static <I> List<I> select(final Iterable<I> base, final Function<I, Boolean> test) {
-        return null;
+        List<I> passingList = new ArrayList<>();
+        Iterator<I> iterator = base.iterator();
+        while (iterator.hasNext()) {
+            I elem =  iterator.next();
+            if (test.call(elem)) {
+                passingList.add(elem);
+            }
+        }
+        return passingList;
     }
 
     /**
@@ -103,6 +123,14 @@ public final class Transformers {
      * @return A list containing only the elements that passed the test
      */
     public static <I> List<I> reject(final Iterable<I> base, final Function<I, Boolean> test) {
-        return null;
+        List<I> rejectList = new ArrayList<>();
+        Iterator<I> iterator = base.iterator();
+        while (iterator.hasNext()) {
+            I elem =  iterator.next();
+            if (!test.call(elem)) {
+                rejectList.add(elem);
+            }
+        }
+        return rejectList;
     }
 }
